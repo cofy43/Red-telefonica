@@ -5,7 +5,6 @@ import Lectura.Estacion;
 import Lectura.Red;
 import java.util.LinkedList;
 
-
 public class DiGrafica {
     public LinkedList<Estacion> estaciones;
     public LinkedList<Enlace> enlaces;
@@ -16,12 +15,12 @@ public class DiGrafica {
         this.enlaces = red.getListaEnlaces();
         this.vertices = new LinkedList<>();
 
-        //Creacion de vertices
+        // Creacion de vertices
         for (Estacion e : estaciones) {
             this.agrega(e);
         }
 
-        //Creacion de las aristas
+        // Creacion de las aristas
         for (Enlace enlace : enlaces) {
             int inicial = enlace.getPrimeraEstacion();
             int fin = enlace.getSegundaEstacion();
@@ -63,7 +62,9 @@ public class DiGrafica {
     @Override
     public String toString() {
         String cadena = "";
-
+        for (Vertice v : vertices) {
+            cadena += v.toString() + "\n";
+        }
         return cadena;
     }
 }

@@ -17,6 +17,10 @@ public class Estacion {
         return this.codigo;
     }
 
+    public String getNombre() {
+        return this.nombre;
+    }
+
     public int contieneTelefono(int telefono) {
         if (listaClientes.containsKey(telefono)) {
             return telefono;
@@ -26,8 +30,7 @@ public class Estacion {
 
     @Override
     public String toString() {
-        return "Nombre de estacion: " + this.nombre + 
-                " \nCodigo: " + this.codigo + 
-                "{\n\t" + this.listaClientes.toString() + "\t}\n";
+        return "Nombre de estacion: " + this.nombre + " \nCodigo: " + this.codigo + "{\n\t"
+                + this.listaClientes.toString() + "\t}\n";
     }
 }

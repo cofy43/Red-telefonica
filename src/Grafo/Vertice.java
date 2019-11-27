@@ -10,7 +10,7 @@ public class Vertice {
     public int indice;
     public Color color;
 
-    public Vertice (Estacion elemento) {
+    public Vertice(Estacion elemento) {
         this.elemento = elemento;
         this.color = Color.NINGUNO;
         this.adyacentes = new LinkedList<>();
@@ -39,5 +39,14 @@ public class Vertice {
             return -1;
         }
         return 0;
+    }
+
+    public String toString() {
+        String cadena = "";
+        String vIni = "(" + elemento.getNombre() + ")-->";
+        for (Arista edge : adyacentes) {
+            cadena += vIni + "(" + edge.vecino.elemento.getNombre() + ")\n";
+        }
+        return cadena;
     }
 }

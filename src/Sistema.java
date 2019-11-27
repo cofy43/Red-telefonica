@@ -32,6 +32,6 @@ public class Sistema {
         }
         Red red = lec.getGrafica().getFirst();
         DiGrafica grafo = new DiGrafica(red);
-        
+        System.out.println(grafo.toString());
     }
 }
