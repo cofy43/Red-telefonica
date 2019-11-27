@@ -17,8 +17,11 @@ public class Estacion {
         return this.codigo;
     }
 
-    public boolean contieneTelefono(int telefono) {
-        return listaClientes.containsKey(telefono);
+    public int contieneTelefono(int telefono) {
+        if (listaClientes.containsKey(telefono)) {
+            return telefono;
+        }
+        return -1;
     }
 
     @Override

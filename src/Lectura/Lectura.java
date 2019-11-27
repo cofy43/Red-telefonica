@@ -41,32 +41,6 @@ public class Lectura {
         return this.digrafica;
     }
 
-    public static void main(String[] args) {
-        Lectura lec = new Lectura();
-        boolean flag = true;
-        try {
-            lec.validacion("/home/martin/Documents/Proyecto-Datos/redat.xml");
-        } catch (ParserConfigurationException e) {
-            flag = false;
-        } catch (FileNotFoundException e) {
-            flag = false;
-        } catch (SAXException e) {
-            flag = false;
-        } catch (IOException e) {
-            flag = false;
-        }
-        String respuesta = "";
-        if (flag) {
-            respuesta = "valido";
-            System.out.println("el archivo es " + respuesta);
-        } else {
-            respuesta = "invalido";
-            System.out.println("el archivo es " + respuesta);
-            System.exit(-1);
-        }
-
-    }
-
     /**
      * Método principal encargado de la validacion completa del archivo xml,
      * analizando la sintaxis correcta de las etiquetas, asi como el nombre de 
