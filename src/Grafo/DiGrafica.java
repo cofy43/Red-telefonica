@@ -16,10 +16,18 @@ public class DiGrafica {
         this.enlaces = red.getListaEnlaces();
         this.vertices = new LinkedList<>();
 
+        //Creacion de vertices
         for (Estacion e : estaciones) {
             this.agrega(e);
         }
 
+        //Creacion de las aristas
+        for (Enlace enlace : enlaces) {
+            int inicial = enlace.getPrimeraEstacion();
+            int fin = enlace.getSegundaEstacion();
+            int peso = enlace.getPeso();
+            enlaza(inicial, fin, peso);
+        }
     }
 
     private void agrega(Estacion estacion) {
@@ -52,4 +60,10 @@ public class DiGrafica {
         return null;
     }
 
+    @Override
+    public String toString() {
+        String cadena = "";
+
+        return cadena;
+    }
 }

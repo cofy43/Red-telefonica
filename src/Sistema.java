@@ -1,11 +1,10 @@
+import Grafo.DiGrafica;
 import Lectura.Lectura;
+import Lectura.Red;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
-
-
-
 
 public class Sistema {
     public static void main(String[] args) {
@@ -31,5 +30,8 @@ public class Sistema {
             System.out.println("el archivo es " + respuesta);
             System.exit(-1);
         }
+        Red red = lec.getGrafica().getFirst();
+        DiGrafica grafo = new DiGrafica(red);
+        
     }
 }
