@@ -3,6 +3,7 @@ package Lectura;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -13,9 +14,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-//import java.io.BufferedReader;
-//import java.io.FileInputStream;
-//import java.io.FileReader;
+
+
+
 
 
 public class Lectura {
@@ -29,10 +30,6 @@ public class Lectura {
     // "segundaEstacion", "distancia" };
     private int orden = 0;
     private int tamano = 0;
-    LinkedList<Cliente> listClient;
-    LinkedList<Estacion> listStation;
-    LinkedList<Red> grafica;
-    LinkedList<Enlace> listLinks;
 
     public int getOrden() {
         return this.orden;
@@ -68,9 +65,6 @@ public class Lectura {
         if (flag) {
             respuesta = "valido";
             System.out.println("el archivo es " + respuesta);
-            //System.out.println("la lista de enlaces es:\n " + lec.listLinks.toString());
-            //System.out.println("la lista de estaciones es:\n " + lec.listStation.toString());
-            //System.out.println("la lista de clientes es:\n " + lec.listClient.toString());
         } else {
             respuesta = "invalido";
             System.out.println("el archivo es " + respuesta);
@@ -100,85 +94,8 @@ public class Lectura {
         });
         Document doc = db.parse(archivoxml);
         doc.getDocumentElement().normalize();
-
-        grafica = new LinkedList<>();
-        NodeList listaDeRedes = doc.getElementsByTagName("Red");
-        for (int i = 0; i < listaDeRedes.getLength(); i++) {
-            Node red = listaDeRedes.item(i);
-
-            if (red.getNodeType() == Node.ELEMENT_NODE) {
-                Element atributosDeRed = (Element) red;
-                this.setOrden(verificaEntero(atributosDeRed.getAttribute("numEstaciones")));
-                this.setTamano(verificaEntero(atributosDeRed.getAttribute("numEnlaces")));
-
-                if (this.getOrden() < 0 || this.getTamanio() < 0) {
-                    return;
-                }
-
-                System.out.println("Numero de estaciones: " + this.getOrden());
-                System.out.println("Numero de enlaces: " + this.getTamanio());
-
-                NodeList listaDeEstaciones = atributosDeRed.getElementsByTagName("Estacion");
-                System.out.println("\tNumero de estaciones: " + listaDeEstaciones.getLength());
-                this.listStation = new LinkedList<>();
-                for (int k = 0; k < this.getOrden(); k++) {
-                    Node estacion = listaDeEstaciones.item(k);
-
-                    if (estacion.getNodeType() == Node.ELEMENT_NODE) {
-                        Element elemento = (Element) estacion;
-                        String nombreDeEstacion = elemento.getAttribute("nombreEstacion");
-                        int codigo = verificaEntero(elemento.getAttribute("codigo"));
-                        System.out.println("\t\tEstacion name: " + nombreDeEstacion);
-                        System.out.println("\t\tEstacion code: " + codigo);
-
-                        NodeList listaClientes = elemento.getElementsByTagName("Cliente");
-
-                        this.listClient = new LinkedList<>();
-                        for (int j = 0; j < listaClientes.getLength(); j++) {
-                            Node cliente = listaClientes.item(j);
-
-                            if (cliente.getNodeType() == Node.ELEMENT_NODE) {
-                                Element elemento1 = (Element) cliente;
-                                String nombreDelCliente = elemento1.getAttribute("nombreCliente");
-                                int telefonoDelCliente = verificaEntero(elemento1.getAttribute("telefono"));
-                                System.out.println("\t\t\tCliente name: " + nombreDelCliente);
-                                System.out.println("\t\t\tCliente phone number: " + telefonoDelCliente);
-                                this.listClient.add(new Cliente(nombreDelCliente, telefonoDelCliente));
-                                System.out.println("\t\t\tLista de clientes: " + this.listClient.toString());
-                            }
-                        }
-                        listStation.add(new Estacion(nombreDeEstacion, codigo, listClient));
-                        System.out.println("\t\tLista de estaciones es: " + listStation.toString());
-                    }
-                }
-
-                NodeList listaDeEnlaces = atributosDeRed.getElementsByTagName("Enlace");
-                System.out.println("\tNumero de enlaces: " + this.getTamanio());
-                if (this.getTamanio() < listaDeEnlaces.getLength()
-                        || this.getTamanio() > listaDeEstaciones.getLength()) {
-                    System.out.println("error, el numero de enlaces no coincide con el numero de etiquetas de enlace");
-                    return;
-                }
-                this.listLinks = new LinkedList<>();
-                for (int j = 0; j < this.getTamanio(); j++) {
-                    Node enlace = listaDeEnlaces.item(j);
-
-                    if (enlace.getNodeType() == Node.ELEMENT_NODE) {
-                        Element propiedadesDeEnlace = (Element) enlace;
-                        int primerEnlace = verificaEntero(propiedadesDeEnlace.getAttribute("primeraEstacion"));
-                        int segungoEnlace = verificaEntero(propiedadesDeEnlace.getAttribute("segundaEstacion"));
-                        int peso = verificaEntero(propiedadesDeEnlace.getAttribute("distancia"));
-                        System.out.println("\t\tPrimer enlace: " + primerEnlace);
-                        System.out.println("\t\tSegundo enlace enlace: " + segungoEnlace);
-                        System.out.println("\t\tPeso enlace: " + peso);
-                        this.listLinks.add(new Enlace(primerEnlace, segungoEnlace, peso));
-                        System.out.println("\t\tLista de enlaces: " + this.listStation.toString());
-                    }
-                }
-                this.grafica.add(new Red(listStation, listLinks));
-                System.out.println("Lista de Redes: " + this.grafica.toString());
-            }
-        }
+        LinkedList<Red> listaDeRedes = analizaRed(doc);
+        System.out.println(listaDeRedes.toString());
     }
 
     public int verificaEntero(String numero) {
@@ -189,29 +106,162 @@ public class Lectura {
         }
 
         return -1;
-
     }
 
-    /*
-     * public boolean validacionEtiquetas(String etiqueta) { String sinCaracteres =
-     * (((((etiqueta.replaceAll("\"", "")).replaceAll("<", "")).replaceAll("/",
-     * ""))) .replaceAll(">", "")).replaceAll("\t", ""); String[] propiedades =
-     * sinCaracteres.split(" "); String nombreEtiqueta = propiedades[0]; switch
-     * (nombreEtiqueta) { case "Red": for (String s : propiedades) { if
-     * (!s.equals("Red")) { int aux = s.indexOf("="); String num = s.substring(aux +
-     * 1); String parametro = s.substring(0, aux); try { aux =
-     * Integer.parseInt(num); } catch (NumberFormatException nfe) {
-     * System.out.println("error al intentar convertir una cadena a un numero");
-     * return false; } switch (parametro) { case "numEstaciones":
-     * System.out.println("Entra en caso 1"); setOrden(aux); break; case
-     * "numEnlaces": System.out.println("Entra en caso 2"); setTamano(aux); default:
-     * System.out.println("Error en la escritura de propiedades"); return false; } }
-     * } break; case "Estacion": for (int i = 1; i <= 2; i++) {
-     * 
-     * } break; case "Cliente": for (int i = 1; i <= 2; i++) {
-     * 
-     * } break; case "Enlace": for (int i = 1; i <= 3; i++) {
-     * 
-     * } break; } return true; }
-     */
+    public boolean validaCadena(String cadena, String propiedad) {
+        if (cadena.equals("")) {
+            System.out.println("Propiedad " + propiedad + " no fue encontrada");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public LinkedList<Red> analizaRed(Document doc) {
+        LinkedList<Red> listRedes = new LinkedList<>();
+        LinkedList<Estacion> listaDeEstaciones;
+        LinkedList<Enlace> listaDeEnlaces;
+        NodeList listaDeRedes = doc.getElementsByTagName("Red");
+        Node red;
+        //Recorremos la lista de redes.
+        for (int i = 0; i < listaDeRedes.getLength(); i++) {
+            red = listaDeRedes.item(i);
+
+            if (red.getNodeType() == Node.ELEMENT_NODE) {
+                Element atributosDeRed = (Element) red;
+                this.setOrden(verificaEntero(atributosDeRed.getAttribute("numEstaciones")));
+                this.setTamano(verificaEntero(atributosDeRed.getAttribute("numEnlaces")));
+
+                //Condicion que verifica la conversion a entero.
+                if (this.getOrden() < 0 || this.getTamanio() < 0) {
+                    System.out.println("error en los parametros de las propiedades de la etiqueta Red numero: " + i);
+                    System.exit(-1);
+                }
+
+                //Creacion de estaciones
+                listaDeEstaciones = analizaEstacion(atributosDeRed);
+                //Creacion de enlaces
+                listaDeEnlaces = analizaEnlace(atributosDeRed);
+                listRedes.add(new Red(listaDeEstaciones, listaDeEnlaces));
+            }
+        }
+        return listRedes;
+    }
+
+    public LinkedList<Estacion> analizaEstacion(Element prop) {
+        NodeList listaDeEtiquetas = prop.getElementsByTagName("Estacion");
+
+        //Condicion que verifica la validez del parametro numEstaciones
+        //con el número de etiquetas
+        if (this.getOrden() != listaDeEtiquetas.getLength()) {
+            System.out.println("Error, no coincide el numero de estaciones en la etiqueta Red con el numero de Etiquetas Estacion");
+            System.exit(-1);
+        }
+
+        //Condicion que verifica que existan estaciones
+        if (listaDeEtiquetas.getLength() == 0) {
+            System.out.println("No se encontraron estaciones registradas");
+            return null;
+        }
+
+        LinkedList<Estacion> listaDeEstaciones = new LinkedList<>();
+        Node estacion;
+        HashMap<String, Integer> listaClientes;
+        Element atributosDeEstacion;
+
+
+        for (int i = 0; i < this.getOrden(); i++) {
+            estacion = listaDeEtiquetas.item(i);
+
+            if (estacion.getNodeType() == Node.ELEMENT_NODE) {
+                atributosDeEstacion = (Element) estacion;
+                String nombreDeEstacion = atributosDeEstacion.getAttribute("nombreEstacion");
+                int codigo = verificaEntero(atributosDeEstacion.getAttribute("codigo"));
+
+                if (codigo < 0 || !(validaCadena(nombreDeEstacion, "nombreEstacion"))) {
+                    System.out.println("Error en las propiedades de la etiqueta Estacion numero: " + i);
+                    System.exit(-1);
+                }
+
+                //Creacion de clientes
+                listaClientes = analizaCliente(atributosDeEstacion);
+                
+                listaDeEstaciones.add(new Estacion(nombreDeEstacion, codigo, listaClientes));
+
+            }
+        }   
+        return listaDeEstaciones;
+    }
+
+    public HashMap<String, Integer> analizaCliente(Element prop) {
+        NodeList listaDeEtiquetas = prop.getElementsByTagName("Cliente");
+
+        //verificacion de seguridad
+        if (listaDeEtiquetas.getLength() == 0) {
+            System.out.println("Lista de clientes vacia");
+            return null;
+        }
+
+        //Creacion de un diccionario con el tamaño justo de clientes
+        HashMap<String, Integer> listaDeClientes = new HashMap<>(listaDeEtiquetas.getLength());
+        Node cliente;
+        Element atributosDeCliente;
+        for (int i = 0; i < listaDeEtiquetas.getLength(); i++) {
+            cliente  = listaDeEtiquetas.item(i);
+
+            if (cliente.getNodeType() == Node.ELEMENT_NODE) {
+                atributosDeCliente = (Element) cliente;
+                String nombreDelCliente = atributosDeCliente.getAttribute("nombreCliente");
+                int telefonoDelCliente = verificaEntero(atributosDeCliente.getAttribute("telefono"));
+
+                if (telefonoDelCliente < 0 || !validaCadena(nombreDelCliente, "nombreCliente")) {
+                    System.out.println("Error en las propiedades de una etiqueta Cliente");
+                    System.exit(-1);
+                }
+
+                listaDeClientes.put(nombreDelCliente, telefonoDelCliente);
+            }
+        }
+        return listaDeClientes;
+    }
+
+    public LinkedList<Enlace> analizaEnlace(Element prop) {
+        NodeList listaDeEtiquetas = prop.getElementsByTagName("Enlace");
+
+        //Condicion que verifica la validez del parametro numEstaciones
+        //con el número de etiquetas
+        if (this.getTamanio() != listaDeEtiquetas.getLength()) {
+            System.out.println("Error, el numero de enlaces no coincide con el numero de etiquetas de Enlaces");
+            System.exit(-1);
+        }
+
+        //Condicion que verifica que existan enlaces
+        if (listaDeEtiquetas.getLength() == 0) {
+            System.out.println("No se encontraron enlaces registrados");
+        }
+
+        LinkedList<Enlace> listaDeEnlace = new LinkedList<>();
+        Node enlace;
+        Element atributosDeEnlace;
+
+        for (int i = 0; i < listaDeEtiquetas.getLength(); i++) {
+            enlace = listaDeEtiquetas.item(i);
+
+            if (enlace.getNodeType() == Node.ELEMENT_NODE) {
+                atributosDeEnlace = (Element) enlace;
+                int primeraEstacion = verificaEntero(atributosDeEnlace.getAttribute("primeraEstacion"));
+                int segundaEstacion = verificaEntero(atributosDeEnlace.getAttribute("segundaEstacion"));
+                int distacia = verificaEntero(atributosDeEnlace.getAttribute("distancia"));
+
+                if (primeraEstacion < 0 || segundaEstacion < 0 || distacia < 0) {
+                    System.out.println("Error en las propiedades de la etiqueta Enlace numero: " + i);
+                    System.exit(-1);
+                }
+
+                listaDeEnlace.add(new Enlace(primeraEstacion, segundaEstacion, distacia));
+            }
+        }
+
+        return listaDeEnlace;
+    }
 }

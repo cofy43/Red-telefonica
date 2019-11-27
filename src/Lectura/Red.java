@@ -13,6 +13,6 @@ public class Red {
 
     @Override
     public String toString() {
-        return "{\n" + this.listaEstacion + "\n" + this.listaEnlace + "\n}";
+        return "Estaciones:\n" +this.listaEstacion.toString() + "\nEnlaces:\n" + this.listaEnlace.toString();
     }
 }
