@@ -15,22 +15,12 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-
-
-
-
 public class Lectura {
-    // final static String[] ETIQUETASRED = { "Red", "numEstaciones", "numEnlaces"
-    // };
-    // final static String[] ETIQUETASESTACION = { "Estacion", "nombreEstacion",
-    // "codigo" };
-    // final static String[] ETIQUETASCliente = { "Cliente", "nombreCliente",
-    // "telefono" };
-    // final static String[] ETIQUETASENLACE = { "Enlace", "primeraEstacion",
-    // "segundaEstacion", "distancia" };
+    private LinkedList<Red> digrafica;
     private int orden = 0;
     private int tamano = 0;
 
+    //getters y setters para las variables que representaran el orden y tamaño de la digrafica
     public int getOrden() {
         return this.orden;
     }
@@ -45,6 +35,10 @@ public class Lectura {
 
     public void setTamano(int tamano) {
         this.tamano = tamano;
+    }
+
+    public LinkedList<Red> getGrafica() {
+        return this.digrafica;
     }
 
     public static void main(String[] args) {
@@ -73,6 +67,16 @@ public class Lectura {
 
     }
 
+    /**
+     * Método principal encargado de la validacion completa del archivo xml,
+     * analizando la sintaxis correcta de las etiquetas, asi como el nombre de 
+     * sus propiedades y parámetros.
+     * @param xmlString Dirrecion de la ubicacion del archivo
+     * @throws ParserConfigurationException
+     * @throws FileNotFoundException
+     * @throws SAXException
+     * @throws IOException
+     */
     public void validacion(String xmlString)
             throws ParserConfigurationException, FileNotFoundException, SAXException, IOException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -94,10 +98,16 @@ public class Lectura {
         });
         Document doc = db.parse(archivoxml);
         doc.getDocumentElement().normalize();
-        LinkedList<Red> listaDeRedes = analizaRed(doc);
-        System.out.println(listaDeRedes.toString());
+        this.digrafica = analizaRed(doc);
+        System.out.println(this.digrafica.toString());
     }
 
+    /**
+     * Método auxiliar encargado de verificar que en una cadena se encuentre un número
+     * @param numero Posible representacion en cadena
+     * @return Retorna -1 si la cadena no es un número, y en otro caso regresa el valor
+     * del número.
+     */
     public int verificaEntero(String numero) {
         try {
             return Integer.parseInt(numero);
@@ -108,6 +118,12 @@ public class Lectura {
         return -1;
     }
 
+    /**
+     * Método auxiliar para verificar la existencia de alguna propiedad en la etiqueta
+     * @param cadena Posible parámetro de una propiedad.
+     * @param propiedad Propiedad a la cual se intentará encontrar en alguna etiqueta.
+     * @return true en caso de que la propiedad exista, false en caso contrario.
+     */
     public boolean validaCadena(String cadena, String propiedad) {
         if (cadena.equals("")) {
             System.out.println("Propiedad " + propiedad + " no fue encontrada");
@@ -117,6 +133,16 @@ public class Lectura {
         }
     }
 
+    /**
+     * Método encargado de la validación de las propiedades y parámetros de la etiqueta
+     * Red, además de la creación de una lista de estaciones y otra de enlaces, para la 
+     * creación de una gráfica dirigida en donde las estaciones serán vértices y los
+     * enlaces las aristas.
+     * @param doc Documento xml donde se almacenará la información necesaria para crear 
+     *            la gráfica
+     * @return  Lista de un objeto Red, el cual almacena dos lista, una de estaciones y
+     *          otra con enlaces.
+     */
     public LinkedList<Red> analizaRed(Document doc) {
         LinkedList<Red> listRedes = new LinkedList<>();
         LinkedList<Estacion> listaDeEstaciones;
@@ -148,6 +174,16 @@ public class Lectura {
         return listRedes;
     }
 
+    /**
+     * Método encargado de la validación de las propiedades y parámetros de la etiqueta
+     * Estacion, además de la creación de una lista de Objetos Estacion la cual almacenará
+     * el nombre y el código de la estación, y un diccionario que almacenará la información
+     * de los clientes de dicha estación.
+     * @param prop Elemento que contendrá la información de los nodos Estacion contenidos
+     *             en las etiquetas de Red
+     * @return Lista de objetos Estacion, el cual contendrán la información de los vértices de 
+     *         la gráfica dirigida.
+     */
     public LinkedList<Estacion> analizaEstacion(Element prop) {
         NodeList listaDeEtiquetas = prop.getElementsByTagName("Estacion");
 
@@ -193,6 +229,14 @@ public class Lectura {
         return listaDeEstaciones;
     }
 
+    /**
+     * Método auxiliar que verifica las propiedades y parámetros de las etiquetas
+     * Cliente, almacenando la informacion en un diccionario en donde la llave es
+     * el nombre del cliente y el valor es el número telefónico.
+     * @param prop Elemento que contendrá la información de los Clientes contenidos
+     *             en las etiquetas de Estacion.
+     * @return Diccionario con la información de los clientes de una estación.
+     */
     public HashMap<String, Integer> analizaCliente(Element prop) {
         NodeList listaDeEtiquetas = prop.getElementsByTagName("Cliente");
 
@@ -225,6 +269,14 @@ public class Lectura {
         return listaDeClientes;
     }
 
+    /**
+     * Método encargado de la validación de las propiedades y parámetros de las etiquetas
+     * Enlace, 
+     * @param prop Elemento que contendrá la información de los nodos Enlace contenidos
+     *             en las etiquetas de Red
+     * @return Lista de objetos Enlace, el cual contendrán la información de las aristas de 
+     *         la gráfica dirigida.
+     */
     public LinkedList<Enlace> analizaEnlace(Element prop) {
         NodeList listaDeEtiquetas = prop.getElementsByTagName("Enlace");
 
@@ -261,7 +313,6 @@ public class Lectura {
                 listaDeEnlace.add(new Enlace(primeraEstacion, segundaEstacion, distacia));
             }
         }
-
         return listaDeEnlace;
     }
 }
