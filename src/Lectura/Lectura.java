@@ -202,7 +202,7 @@ public class Lectura {
 
         LinkedList<Estacion> listaDeEstaciones = new LinkedList<>();
         Node estacion;
-        HashMap<String, Integer> listaClientes;
+        HashMap<Integer, String> listaClientes;
         Element atributosDeEstacion;
 
 
@@ -237,7 +237,7 @@ public class Lectura {
      *             en las etiquetas de Estacion.
      * @return Diccionario con la información de los clientes de una estación.
      */
-    public HashMap<String, Integer> analizaCliente(Element prop) {
+    public HashMap<Integer, String> analizaCliente(Element prop) {
         NodeList listaDeEtiquetas = prop.getElementsByTagName("Cliente");
 
         //verificacion de seguridad
@@ -247,7 +247,7 @@ public class Lectura {
         }
 
         //Creacion de un diccionario con el tamaño justo de clientes
-        HashMap<String, Integer> listaDeClientes = new HashMap<>(listaDeEtiquetas.getLength());
+        HashMap<Integer, String> listaDeClientes = new HashMap<>(listaDeEtiquetas.getLength());
         Node cliente;
         Element atributosDeCliente;
         for (int i = 0; i < listaDeEtiquetas.getLength(); i++) {
@@ -263,7 +263,7 @@ public class Lectura {
                     System.exit(-1);
                 }
 
-                listaDeClientes.put(nombreDelCliente, telefonoDelCliente);
+                listaDeClientes.put(telefonoDelCliente, nombreDelCliente);
             }
         }
         return listaDeClientes;

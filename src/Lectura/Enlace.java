@@ -11,6 +11,18 @@ public class Enlace {
         this.pesoDeEnlace = pesoDeEnlace;
     }
 
+    public int getPrimeraEstacion() {
+        return this.primeraEstacion;
+    }
+
+    public int getSegundaEstacion() {
+        return this.segundaEstacion;
+    }
+
+    public int getPeso() {
+        return this.pesoDeEnlace;
+    }
+
     @Override
     public String toString() {
         return this.primeraEstacion + " -> " + this.segundaEstacion + " (" + this.pesoDeEnlace + ")";

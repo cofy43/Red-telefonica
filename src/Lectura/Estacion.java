@@ -5,12 +5,20 @@ import java.util.HashMap;
 public class Estacion {
     private String nombre;
     private int codigo;
-    private HashMap<String, Integer> listaClientes;
+    private HashMap<Integer, String> listaClientes;
 
-    public Estacion(String nombre, int codigo, HashMap<String, Integer> listaClientes) {
+    public Estacion(String nombre, int codigo, HashMap<Integer, String> listaClientes) {
         this.nombre = nombre;
         this.codigo = codigo;
         this.listaClientes = listaClientes;
+    }
+
+    public int getCodigo() {
+        return this.codigo;
+    }
+
+    public boolean contieneTelefono(int telefono) {
+        return listaClientes.containsKey(telefono);
     }
 
     @Override
