@@ -28,6 +28,10 @@ public class Estacion {
         return -1;
     }
 
+    public String imprimeClientes() {
+        return this.listaClientes.toString();
+    }
+
     @Override
     public String toString() {
         return "Nombre de estacion: " + this.nombre + " \nCodigo: " + this.codigo + "{\n\t"

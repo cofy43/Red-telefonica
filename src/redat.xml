@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Red SYSTEM "Red.dtd">
+<Red numEstaciones="5" numEnlaces="5">
+    <Estacion nombreEstacion="ciudad de mexico" codigo="1">
+       <Cliente nombreCliente="carlos" telefono="56581111"/>
+       <Cliente nombreCliente="joaquin" telefono="55667788"/>
+   </Estacion>
+   <Estacion nombreEstacion="morelia" codigo="2">
+       <Cliente nombreCliente="pedro" telefono="55771122"/>
+   </Estacion>
+   <Estacion nombreEstacion="cuernavaca" codigo="3">
+       <Cliente nombreCliente="raul" telefono="554430322"/>
+   </Estacion>
+   <Estacion nombreEstacion="pachuca" codigo="4">
+       <Cliente nombreCliente="luis" telefono="11223311"/>
+   </Estacion>
+   <Estacion nombreEstacion="tlaxcala" codigo="5">
+       <Cliente nombreCliente="juan" telefono="55443322"/>
+   </Estacion>
+   <Enlace primeraEstacion="1" segundaEstacion="2" distancia="10"/>
+   <Enlace primeraEstacion="2" segundaEstacion="3" distancia="10"/>
+   <Enlace primeraEstacion="3" segundaEstacion="4" distancia="10"/>
+   <Enlace primeraEstacion="4" segundaEstacion="5" distancia="10"/>
+   <Enlace primeraEstacion="1" segundaEstacion="4" distancia="100"/>
+</Red>

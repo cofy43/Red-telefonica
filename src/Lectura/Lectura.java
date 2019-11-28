@@ -20,7 +20,8 @@ public class Lectura {
     private int orden = 0;
     private int tamano = 0;
 
-    //getters y setters para las variables que representaran el orden y tamaño de la digrafica
+    // getters y setters para las variables que representaran el orden y tamaño de
+    // la digrafica
     public int getOrden() {
         return this.orden;
     }
@@ -43,8 +44,9 @@ public class Lectura {
 
     /**
      * Método principal encargado de la validacion completa del archivo xml,
-     * analizando la sintaxis correcta de las etiquetas, asi como el nombre de 
-     * sus propiedades y parámetros.
+     * analizando la sintaxis correcta de las etiquetas, asi como el nombre de sus
+     * propiedades y parámetros.
+     * 
      * @param xmlString Dirrecion de la ubicacion del archivo
      * @throws ParserConfigurationException
      * @throws FileNotFoundException
@@ -73,14 +75,16 @@ public class Lectura {
         Document doc = db.parse(archivoxml);
         doc.getDocumentElement().normalize();
         this.digrafica = analizaRed(doc);
-        System.out.println(this.digrafica.toString());
+        // System.out.println(this.digrafica.toString());
     }
 
     /**
-     * Método auxiliar encargado de verificar que en una cadena se encuentre un número
+     * Método auxiliar encargado de verificar que en una cadena se encuentre un
+     * número
+     * 
      * @param numero Posible representacion en cadena
-     * @return Retorna -1 si la cadena no es un número, y en otro caso regresa el valor
-     * del número.
+     * @return Retorna -1 si la cadena no es un número, y en otro caso regresa el
+     *         valor del número.
      */
     public int verificaEntero(String numero) {
         try {
@@ -93,9 +97,12 @@ public class Lectura {
     }
 
     /**
-     * Método auxiliar para verificar la existencia de alguna propiedad en la etiqueta
-     * @param cadena Posible parámetro de una propiedad.
-     * @param propiedad Propiedad a la cual se intentará encontrar en alguna etiqueta.
+     * Método auxiliar para verificar la existencia de alguna propiedad en la
+     * etiqueta
+     * 
+     * @param cadena    Posible parámetro de una propiedad.
+     * @param propiedad Propiedad a la cual se intentará encontrar en alguna
+     *                  etiqueta.
      * @return true en caso de que la propiedad exista, false en caso contrario.
      */
     public boolean validaCadena(String cadena, String propiedad) {
@@ -108,14 +115,15 @@ public class Lectura {
     }
 
     /**
-     * Método encargado de la validación de las propiedades y parámetros de la etiqueta
-     * Red, además de la creación de una lista de estaciones y otra de enlaces, para la 
-     * creación de una gráfica dirigida en donde las estaciones serán vértices y los
-     * enlaces las aristas.
-     * @param doc Documento xml donde se almacenará la información necesaria para crear 
-     *            la gráfica
-     * @return  Lista de un objeto Red, el cual almacena dos lista, una de estaciones y
-     *          otra con enlaces.
+     * Método encargado de la validación de las propiedades y parámetros de la
+     * etiqueta Red, además de la creación de una lista de estaciones y otra de
+     * enlaces, para la creación de una gráfica dirigida en donde las estaciones
+     * serán vértices y los enlaces las aristas.
+     * 
+     * @param doc Documento xml donde se almacenará la información necesaria para
+     *            crear la gráfica
+     * @return Lista de un objeto Red, el cual almacena dos lista, una de estaciones
+     *         y otra con enlaces.
      */
     public LinkedList<Red> analizaRed(Document doc) {
         LinkedList<Red> listRedes = new LinkedList<>();
@@ -123,7 +131,7 @@ public class Lectura {
         LinkedList<Enlace> listaDeEnlaces;
         NodeList listaDeRedes = doc.getElementsByTagName("Red");
         Node red;
-        //Recorremos la lista de redes.
+        // Recorremos la lista de redes.
         for (int i = 0; i < listaDeRedes.getLength(); i++) {
             red = listaDeRedes.item(i);
 
@@ -132,15 +140,15 @@ public class Lectura {
                 this.setOrden(verificaEntero(atributosDeRed.getAttribute("numEstaciones")));
                 this.setTamano(verificaEntero(atributosDeRed.getAttribute("numEnlaces")));
 
-                //Condicion que verifica la conversion a entero.
+                // Condicion que verifica la conversion a entero.
                 if (this.getOrden() < 0 || this.getTamanio() < 0) {
                     System.out.println("error en los parametros de las propiedades de la etiqueta Red numero: " + i);
                     System.exit(-1);
                 }
 
-                //Creacion de estaciones
+                // Creacion de estaciones
                 listaDeEstaciones = analizaEstacion(atributosDeRed);
-                //Creacion de enlaces
+                // Creacion de enlaces
                 listaDeEnlaces = analizaEnlace(atributosDeRed);
                 listRedes.add(new Red(listaDeEstaciones, listaDeEnlaces));
             }
@@ -149,26 +157,28 @@ public class Lectura {
     }
 
     /**
-     * Método encargado de la validación de las propiedades y parámetros de la etiqueta
-     * Estacion, además de la creación de una lista de Objetos Estacion la cual almacenará
-     * el nombre y el código de la estación, y un diccionario que almacenará la información
-     * de los clientes de dicha estación.
-     * @param prop Elemento que contendrá la información de los nodos Estacion contenidos
-     *             en las etiquetas de Red
-     * @return Lista de objetos Estacion, el cual contendrán la información de los vértices de 
-     *         la gráfica dirigida.
+     * Método encargado de la validación de las propiedades y parámetros de la
+     * etiqueta Estacion, además de la creación de una lista de Objetos Estacion la
+     * cual almacenará el nombre y el código de la estación, y un diccionario que
+     * almacenará la información de los clientes de dicha estación.
+     * 
+     * @param prop Elemento que contendrá la información de los nodos Estacion
+     *             contenidos en las etiquetas de Red
+     * @return Lista de objetos Estacion, el cual contendrán la información de los
+     *         vértices de la gráfica dirigida.
      */
     public LinkedList<Estacion> analizaEstacion(Element prop) {
         NodeList listaDeEtiquetas = prop.getElementsByTagName("Estacion");
 
-        //Condicion que verifica la validez del parametro numEstaciones
-        //con el número de etiquetas
+        // Condicion que verifica la validez del parametro numEstaciones
+        // con el número de etiquetas
         if (this.getOrden() != listaDeEtiquetas.getLength()) {
-            System.out.println("Error, no coincide el numero de estaciones en la etiqueta Red con el numero de Etiquetas Estacion");
+            System.out.println(
+                    "Error, no coincide el numero de estaciones en la etiqueta Red con el numero de Etiquetas Estacion");
             System.exit(-1);
         }
 
-        //Condicion que verifica que existan estaciones
+        // Condicion que verifica que existan estaciones
         if (listaDeEtiquetas.getLength() == 0) {
             System.out.println("No se encontraron estaciones registradas");
             return null;
@@ -178,7 +188,6 @@ public class Lectura {
         Node estacion;
         HashMap<Integer, String> listaClientes;
         Element atributosDeEstacion;
-
 
         for (int i = 0; i < this.getOrden(); i++) {
             estacion = listaDeEtiquetas.item(i);
@@ -193,20 +202,21 @@ public class Lectura {
                     System.exit(-1);
                 }
 
-                //Creacion de clientes
+                // Creacion de clientes
                 listaClientes = analizaCliente(atributosDeEstacion);
-                
+
                 listaDeEstaciones.add(new Estacion(nombreDeEstacion, codigo, listaClientes));
 
             }
-        }   
+        }
         return listaDeEstaciones;
     }
 
     /**
      * Método auxiliar que verifica las propiedades y parámetros de las etiquetas
-     * Cliente, almacenando la informacion en un diccionario en donde la llave es
-     * el nombre del cliente y el valor es el número telefónico.
+     * Cliente, almacenando la informacion en un diccionario en donde la llave es el
+     * nombre del cliente y el valor es el número telefónico.
+     * 
      * @param prop Elemento que contendrá la información de los Clientes contenidos
      *             en las etiquetas de Estacion.
      * @return Diccionario con la información de los clientes de una estación.
@@ -214,18 +224,18 @@ public class Lectura {
     public HashMap<Integer, String> analizaCliente(Element prop) {
         NodeList listaDeEtiquetas = prop.getElementsByTagName("Cliente");
 
-        //verificacion de seguridad
+        // verificacion de seguridad
         if (listaDeEtiquetas.getLength() == 0) {
             System.out.println("Lista de clientes vacia");
             return null;
         }
 
-        //Creacion de un diccionario con el tamaño justo de clientes
+        // Creacion de un diccionario con el tamaño justo de clientes
         HashMap<Integer, String> listaDeClientes = new HashMap<>(listaDeEtiquetas.getLength());
         Node cliente;
         Element atributosDeCliente;
         for (int i = 0; i < listaDeEtiquetas.getLength(); i++) {
-            cliente  = listaDeEtiquetas.item(i);
+            cliente = listaDeEtiquetas.item(i);
 
             if (cliente.getNodeType() == Node.ELEMENT_NODE) {
                 atributosDeCliente = (Element) cliente;
@@ -244,24 +254,25 @@ public class Lectura {
     }
 
     /**
-     * Método encargado de la validación de las propiedades y parámetros de las etiquetas
-     * Enlace, 
-     * @param prop Elemento que contendrá la información de los nodos Enlace contenidos
-     *             en las etiquetas de Red
-     * @return Lista de objetos Enlace, el cual contendrán la información de las aristas de 
-     *         la gráfica dirigida.
+     * Método encargado de la validación de las propiedades y parámetros de las
+     * etiquetas Enlace,
+     * 
+     * @param prop Elemento que contendrá la información de los nodos Enlace
+     *             contenidos en las etiquetas de Red
+     * @return Lista de objetos Enlace, el cual contendrán la información de las
+     *         aristas de la gráfica dirigida.
      */
     public LinkedList<Enlace> analizaEnlace(Element prop) {
         NodeList listaDeEtiquetas = prop.getElementsByTagName("Enlace");
 
-        //Condicion que verifica la validez del parametro numEstaciones
-        //con el número de etiquetas
+        // Condicion que verifica la validez del parametro numEstaciones
+        // con el número de etiquetas
         if (this.getTamanio() != listaDeEtiquetas.getLength()) {
             System.out.println("Error, el numero de enlaces no coincide con el numero de etiquetas de Enlaces");
             System.exit(-1);
         }
 
-        //Condicion que verifica que existan enlaces
+        // Condicion que verifica que existan enlaces
         if (listaDeEtiquetas.getLength() == 0) {
             System.out.println("No se encontraron enlaces registrados");
         }

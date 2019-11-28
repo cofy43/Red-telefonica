@@ -1,6 +1,5 @@
 package Grafo;
 
-
 public class Arista {
     Vertice vecino;
     int peso;
@@ -24,5 +23,9 @@ public class Arista {
 
     public void setColor(Color color) {
         vecino.setColor(color);
+    }
+
+    public String toString() {
+        return vecino.toString();
     }
 }

@@ -3,7 +3,7 @@ package Grafo;
 import Lectura.Estacion;
 import java.util.LinkedList;
 
-public class Vertice {
+public class Vertice implements Comparable<Vertice>{
     LinkedList<Arista> adyacentes;
     public Estacion elemento;
     public int distancia;
@@ -32,6 +32,7 @@ public class Vertice {
         return this.adyacentes.size();
     }
 
+    @Override
     public int compareTo(Vertice v) {
         if (distancia > v.distancia) {
             return 1;
@@ -41,11 +42,12 @@ public class Vertice {
         return 0;
     }
 
+    @Override
     public String toString() {
         String cadena = "";
-        String vIni = "(" + elemento.getNombre() + ")-->";
+        String vIni = "(" + elemento.getNombre() + ")--";
         for (Arista edge : adyacentes) {
-            cadena += vIni + "(" + edge.vecino.elemento.getNombre() + ")\n";
+            cadena += vIni + edge.peso + "-->(" + edge.vecino.elemento.getNombre() + ")\n";
         }
         return cadena;
     }
