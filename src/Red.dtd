@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- =============================================================================
+ Red.dtd.
+
+ Contiene la definici�n de un archivo .xml de entrada para una red telef�nica.
+ conformada por un conjunto no vac�o de estaciones y otro de
+ enlaces entre ellas. El n�mero de estaciones y de enlaces est�n dados
+ como atributos.
+============================================================================= -->
+
+<!ELEMENT Red (Estacion+, Enlace*)>
+<!ATTLIST Red numEstaciones CDATA #REQUIRED>
+<!ATTLIST Red numEnlaces CDATA #REQUIRED>
+
+<!-- Una estacion esta formada por un conjunto de clientes y
+adem�s tiene como atributos el nombre y el codigo identificador de area -->
+
+<!ELEMENT Estacion (Cliente*)>
+<!ATTLIST Estacion nombreEstacion CDATA #REQUIRED>
+<!ATTLIST Estacion codigo CDATA #REQUIRED>
+
+<!-- Un cliente puede ser un elemento vacio cuyos atributos
+son nombreCliente y telefono -->
+
+<!ELEMENT Cliente EMPTY>
+<!ATTLIST Cliente nombreCliente CDATA #REQUIRED>
+<!ATTLIST Cliente telefono CDATA #REQUIRED>
+
+<!-- Enlace puede ser un elemento vacio cuyos atributos
+ son los identificadores de dos estaciones y su distancia
+ -->
+
+<!ELEMENT Enlace EMPTY>
+<!ATTLIST Enlace primeraEstacion CDATA #REQUIRED>
+<!ATTLIST Enlace segundaEstacion CDATA #REQUIRED>
+<!ATTLIST Enlace distancia CDATA #REQUIRED>
